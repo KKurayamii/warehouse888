@@ -1,0 +1,170 @@
+{% extends 'analytics/base.html' %}
+{% load static %}
+
+{% block title %}AI Agent - Smart Sales Analytics{% endblock %}
+
+{% block content %}
+<div class="flex-1 flex flex-col">
+    <div class="max-w-5xl mx-auto w-full flex-1 flex flex-col py-6 px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="mb-6 animate-fade-in">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">🤖 Autonomous AI Data Analyst</h1>
+            <p class="mt-1 text-base text-gray-500">Upload your data and chat with an intelligent agent that can reason, plan, and analyze</p>
+
+            {% if not gemini_configured %}
+            <div class="mt-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/50 rounded-2xl p-4 shadow-sm">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-amber-500 text-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-semibold text-amber-900">Gemini Not Configured</h3>
+                        <p class="text-sm text-amber-700 mt-1">Please set your GEMINI_API_KEY in the .env file to enable AI features.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- File Upload Section -->
+        <div id="uploadSection" class="mb-6 animate-scale-in">
+            <div class="bg-white rounded-2xl shadow-apple overflow-hidden">
+                <div class="p-6">
+                    <!-- Upload Status -->
+                    <div id="uploadStatus" class="mb-4">
+                        <div id="noFileStatus" class="flex items-center text-gray-500">
+                            <i class="fas fa-circle-info mr-2"></i>
+                            <span class="text-sm">No data uploaded yet - Upload a CSV file to start</span>
+                        </div>
+                        <div id="fileLoadedStatus" class="hidden flex items-center text-green-600">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span class="text-sm">✅ Data loaded: <span id="loadedFileName" class="font-semibold"></span></span>
+                            <span class="ml-2 text-xs text-gray-500">(<span id="loadedRowCount"></span> rows)</span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <div class="flex items-center gap-4">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" class="hidden">
+                        <button onclick="document.getElementById('fileInput').click()"
+                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-full hover:shadow-lg hover:scale-105 transition-all duration-200"
+                                id="uploadButton">
+                            <i class="fas fa-cloud-arrow-up mr-2"></i>
+                            <span id="uploadButtonText">Upload CSV File</span>
+                        </button>
+
+                        <!-- Upload Progress -->
+                        <div id="uploadProgress" class="hidden flex-1">
+                            <div class="flex items-center">
+                                <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                                    <div id="uploadProgressBar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <span id="uploadProgressText" class="ml-3 text-sm text-gray-600">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Message -->
+                    <div id="uploadMessage" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="bg-white rounded-2xl shadow-apple overflow-hidden flex flex-col animate-scale-in" style="min-height: 500px; max-height: 600px;">
+            <!-- Messages Area -->
+            <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-4" style="background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);">
+                <!-- Welcome Message -->
+                <div class="flex items-start space-x-3 animate-fade-in">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 max-w-2xl">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm border border-blue-100">
+                            <p class="text-sm font-medium text-gray-900 mb-2">👋 Hello! I'm your Autonomous AI Data Analyst</p>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-2">I can help you understand your data through intelligent reasoning and analysis. Here's what I can do:</p>
+                            <ul class="text-sm text-gray-700 space-y-1 mb-2">
+                                <li>• 🧠 Reason step-by-step about complex data problems</li>
+                                <li>• 📊 Create visualizations and generate insights</li>
+                                <li>• 🔧 Self-correct errors and try different approaches</li>
+                                <li>• 💬 Have natural conversations about your data</li>
+                            </ul>
+                            <p class="text-sm text-gray-600 italic">Upload a CSV file above to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="border-t border-gray-200/50 p-4 bg-white/80 backdrop-blur-lg">
+                <form id="chatForm" class="flex gap-2 items-end">
+                    <div class="flex-1">
+                        <input
+                            type="text"
+                            id="messageInput"
+                            placeholder="Ask me anything about your data..."
+                            class="w-full px-4 py-3 text-sm bg-gray-100 border-0 rounded-full focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
+                            required
+                            disabled
+                        >
+                    </div>
+                    <button
+                        type="submit"
+                        id="sendButton"
+                        class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        <span id="sendButtonIcon">
+                            <i class="fas fa-arrow-up"></i>
+                        </span>
+                        <span id="sendButtonLoading" class="hidden">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Optional: Show Reasoning Toggle -->
+                <div class="mt-2 flex items-center justify-end">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" id="showReasoningToggle" class="mr-2 rounded text-blue-500 focus:ring-blue-500">
+                        <span class="text-xs text-gray-600">Show agent reasoning</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Example Questions -->
+        <div id="examplesSection" class="mt-6 hidden animate-slide-up">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">💡 Try asking:</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button onclick="askExample('What are the top 5 products by revenue?')"
+                        class="text-left px-4 py-3 text-sm bg-white hover:bg-gray-50 rounded-xl border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-200">
+                    <span class="text-gray-700">"What are the top 5 products by revenue?"</span>
+                </button>
+                <button onclick="askExample('Show me a trend of sales over time')"
+                        class="text-left px-4 py-3 text-sm bg-white hover:bg-gray-50 rounded-xl border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-200">
+                    <span class="text-gray-700">"Show me a trend of sales over time"</span>
+                </button>
+                <button onclick="askExample('Which categories generate the most revenue?')"
+                        class="text-left px-4 py-3 text-sm bg-white hover:bg-gray-50 rounded-xl border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-200">
+                    <span class="text-gray-700">"Which categories generate the most revenue?"</span>
+                </button>
+                <button onclick="askExample('Create a pie chart of payment methods')"
+                        class="text-left px-4 py-3 text-sm bg-white hover:bg-gray-50 rounded-xl border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-200">
+                    <span class="text-gray-700">"Create a pie chart of payment methods"</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/agent.js' %}"></script>
+{% endblock %}
