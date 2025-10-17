@@ -41,6 +41,9 @@ Deployment (การนำขึ้นใช้งานจริง):
 - Web Server (เช่น Gunicorn, Nginx): สำหรับ Run Django Application
 - Server/Cloud (เช่น AWS, Google Cloud, DigitalOcean): สำหรับติดตั้งและให้บริการโปรแกรม
 
+
+ลิงค์ สไลด์นำเสนอ : https://www.canva.com/design/DAG2BdtwMOI/P2Q5v82eNB7IxaKiC77q0A/edit?utm_content=DAG2BdtwMOI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+ลิงค์Folder video : https://drive.google.com/drive/folders/1xTTDLr5TBQR2ddWARosgHNXVPs_Vea46?usp=sharing
 ----------------------------------------
 
 An AI-powered sales analytics platform with **ChatGPT integration** that allows e-commerce entrepreneurs to have natural conversations about their sales data.
