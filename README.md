@@ -1,5 +1,48 @@
 # Smart Sales Analytics System 🚀
 
+ชื่อโครงการ
+- ระบบวิเคราะห์ข้อมูลการขายอัจฉริยะสำหรับธุรกิจอีคอมเมิร์ซด้วย Data Warehouse และ Generative AI
+
+สมาชิก 
+มีจำนวนทัังหมด 4 คน ได้แก่
+- 64114540436 นายธนานนท์ โสภิตชา 
+- 65114540709 นางสาวอันนา สาครวงศ์วัฒนา
+- 65114540310 นางสาวนัตติกานต์ คำสวาสดิ์
+- 64114540102 นายฐานันดร มิยะพันธ์
+
+วัตถุประสงค์
+- เพื่อช่วยให้ผู้ประกอบการวิเคราะห์ข้อมูลการขายได้ด้วยตนเอง โดยไม่ต้องพึ่งพาผู้เชี่ยวชาญ
+- เพื่อลดเวลาในการสร้างรายงาน จากหลายชั่วโมงเหลือเพียงไม่กี่นาที
+- เพื่อให้ได้ข้อมูลเชิงลึก (Insights) ที่นำไปใช้ตัดสินใจทางธุรกิจได้ทันที
+- เพื่อรองรับข้อมูลจากแพลตฟอร์มอีคอมเมิร์ซชั้นนำในประเทศไทย
+
+เครื่องมือ
+Backend Framework:
+- Django: ใช้จัดการ Logic ทั้งหมด, สร้าง API, และเชื่อมต่อกับส่วนต่างๆ ของระบบ
+- Django REST Framework: (แนะนำ) สำหรับสร้าง API ที่เป็นระเบียบและง่ายต่อการจัดการ
+
+Frontend:
+- Django Templates: ใช้สร้างหน้าเว็บ HTML พื้นฐาน
+- CSS Framework (เช่น Bootstrap, Tailwind CSS): เพื่อความสวยงามและ Responsive
+- JavaScript (Fetch API หรือ Axios): เพื่อให้หน้าเว็บสามารถรับ-ส่งข้อมูลกับ Django Backend ได้โดยไม่ต้องโหลดใหม่ทั้งหน้า (Asynchronous)
+
+ฐานข้อมูล (Data Warehouse):
+-ClickHouse:ฐานข้อมูลหลักสำหรับเก็บข้อมูลวิเคราะห์
+-clickhouse-driver: Library ของ Python สำหรับให้ Django เชื่อมต่อกับ ClickHouse
+
+AI & Data Processing:
+-Python: ภาษาหลักในการพัฒนา
+-OpenAI API: ใช้บริการโมเดลภาษาขนาดใหญ่ (Gemini)
+-openai (Python Library): สำหรับเรียกใช้ OpenAI API
+-LangChain: Framework ที่ช่วยจัดการการสร้าง Prompt และการเชื่อมต่อกับ OpenAI ให้ง่ายขึ้น
+-Pandas: สำหรับจัดการข้อมูลจากไฟล์ CSV/Excel ในขั้นตอน ETL
+
+Deployment (การนำขึ้นใช้งานจริง):
+- Web Server (เช่น Gunicorn, Nginx): สำหรับ Run Django Application
+- Server/Cloud (เช่น AWS, Google Cloud, DigitalOcean): สำหรับติดตั้งและให้บริการโปรแกรม
+
+----------------------------------------
+
 An AI-powered sales analytics platform with **ChatGPT integration** that allows e-commerce entrepreneurs to have natural conversations about their sales data.
 
 ## ✨ Features
